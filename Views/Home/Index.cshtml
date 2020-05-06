@@ -1,0 +1,116 @@
+﻿@model List<sample.modal.Models.UsuarioViewModel>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <button id="btnModal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+        Launch demo modal
+    </button>
+</div>
+
+<div class="row" >
+    <div class="col-md-12" id="someElement"> // add id attribute
+      </div>
+</div>
+
+@section scripts {
+    <script> 
+    
+    var ajaxCallURL = '@this.Url.Action("GetUsuario", "Home")';
+    
+    
+    $(function()
+ {  
+     
+     
+       var itemsState = "<option value='0'>Select</option>";
+                 $("#countrylist").html(itemsState);
+                 
+        var items = "<option value='0'>Select</option>";
+                        $("#citylist").html(items); 
+             
+                        
+    //Bind City dropdownlist
+           $("#countrylist").on("change",function () {
+               /* debugger;
+                var state = $("#countrylist").val();
+                var url = "@Url.Action("GetCity", "Home")";
+
+                $.getJSON(url, { state: state }, function (data) {  
+                    var item = "";
+                    $("#citylist").empty();
+                    $.each(data, function (i, city) {
+                        item += '<option value="' + city.value + '">' + city.text + '</option>'
+                    });
+                    $("#citylist").html(item);
+                });*/
+                console.log(this)
+            });
+                 
+        $("#btnModal").click(function()  
+         {
+             debugger;
+            var $buttonClicked = $(this);  
+            var options = {  
+                "backdrop": "static",  
+                keyboard: true  
+            };  
+            $.ajax({  
+                type: "GET",  
+                url: ajaxCallURL,  
+                contentType: "application/json; charset=utf-8",  
+                datatype: "json",  
+                success: function(response)  
+                {  
+                          $('#someElement').html(response); // add this (adjust id to suit)
+                          //Bind City dropdownlist
+                                      
+                                          var countryId = $("#countrylist").val();
+                                          var url = "@Url.Action("GetState", "Home")";
+                                           var urlCity = "@Url.Action("GetCity", "Home")";
+                              
+                                          $.getJSON(url, function (data) {  
+                                              var item = "";
+                                              $("#countrylist").empty();
+                                               $("#citylist").empty();
+                                              $.each(data, function (i, city) {
+                                                  item += '<option value="' + city.value + '">' + city.text + '</option>'
+                                              });
+                                              $("#countrylist").html(item);
+                                                state = $("#countrylist").val();
+                                                
+                                              $.getJSON(urlCity, { state: state }, function (data) {  
+                                                                  var item = "";
+                                                                 
+                                                                  $.each(data, function (i, city) {
+                                                                      item += '<option value="' + city.value + '">' + city.text + '</option>'
+                                                                  });
+                                                                  $("#citylist").html(item);
+                                                              });
+                                          });
+                                      
+                            $("#myModal").modal();
+                            
+                            
+
+                 
+                },  
+                error: function() {  
+                    alert("Content load failed.");  
+                }  
+            });  
+        });  
+        $("#closbtn").click(function()  
+        {  
+            debugger;  
+            $('#myModal').modal('hide');  
+        });  
+    }); 
+</script>
+}
+
+;
